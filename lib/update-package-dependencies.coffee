@@ -13,7 +13,6 @@ module.exports =
     args = ['update']
     process = childProcess.spawn command, args, {cwd: atom.project.getPath()}
     process.on 'close', (code, signal) ->
-      console.log "not cool"
       view.empty().focus().on 'focusout', -> view.remove()
       atom.workspaceView.once 'core:cancel', -> view.remove()
 
