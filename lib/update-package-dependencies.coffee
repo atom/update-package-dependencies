@@ -16,7 +16,7 @@ module.exports =
       view.empty().focus().on 'focusout', -> view.remove()
       atom.workspaceView.once 'core:cancel', -> view.remove()
 
-      success = (code != 0)
+      success = (code == 0)
       if success
         view.append $$ ->
           @div class: 'text-success', 'Package depencencies updated.'
