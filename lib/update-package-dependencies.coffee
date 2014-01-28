@@ -1,5 +1,5 @@
 childProcess = require 'child_process'
-{$$} = require 'atom'
+{$$, BufferedNodeProcess} = require 'atom'
 
 module.exports =
   activate: ->
@@ -10,11 +10,11 @@ module.exports =
     atom.workspaceView.append(view)
 
     command = atom.packages.getApmPath()
-    args = ['update']
-    process = childProcess.spawn command, args, {cwd: atom.project.getPath()}
-    process.on 'close', (code, signal) ->
+    args = ['install']
+    options = {cwd: atom.project.getPath()}
+    exit = (code, signal) ->
+      atom.workspaceView.one 'core:cancel', -> view.remove()
       view.empty().focus().on 'focusout', -> view.remove()
-      atom.workspaceView.once 'core:cancel', -> view.remove()
 
       success = (code == 0)
       if success
@@ -22,8 +22,9 @@ module.exports =
           @div class: 'text-success', 'Package depencencies updated.'
       else
         view.append $$ ->
-          @div class: 'error-text', 'Failed to update package depencencies.'
+          @div class: 'text-error', 'Failed to update package depencencies.'
 
+    new BufferedNodeProcess({command, args, exit, options})
 
   createProgressView: ->
     $$ ->
