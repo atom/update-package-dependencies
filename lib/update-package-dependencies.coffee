@@ -29,4 +29,4 @@ module.exports =
     $$ ->
       @div tabindex: -1, class: 'overlay from-top', =>
         @span class: 'loading loading-spinner-small inline-block'
-        @span "Updating package dependencies..."
+        @span "Updating package dependencies\u2026"
