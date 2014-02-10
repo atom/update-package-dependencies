@@ -1,4 +1,3 @@
-childProcess = require 'child_process'
 {$$, BufferedNodeProcess} = require 'atom'
 
 module.exports =
