@@ -6,7 +6,10 @@ describe "Update Package Dependencies", ->
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
-    {mainModule} = atom.packages.activatePackage('update-package-dependencies', immediate: true)
+
+    waitsForPromise ->
+      atom.packages.activatePackage('update-package-dependencies').then (pack) ->
+        mainModule = pack.mainModule
 
   it "updates package dependencies", ->
     spyOn(mainModule, 'update')
