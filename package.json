@@ -5,12 +5,7 @@
   "private": true,
   "description": "A short description of your package",
   "repository": "https://github.com/atom/update-package-dependencies",
-  "licenses": [
-    {
-      "type": "Apache",
-      "url": "http://github.com/atom/update-package-dependencies/raw/master/LICENSE.md"
-    }
-  ],
+  "license": "MIT",
   "engines": {
     "atom": ">0.39.0"
   },
