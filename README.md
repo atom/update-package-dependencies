@@ -1,3 +1,6 @@
-## Update Package Dependencies Package
+## Update Package Dependencies package
 
-Calls 'apm update' from the current project's directory
+Runs `apm update` from the current project's directory. This will install all
+dependencies referenced in the `package.json` file to the `node_modules` folder.
+
+This should only be used in project's that are Atom packages.

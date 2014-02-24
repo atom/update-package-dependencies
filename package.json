@@ -3,7 +3,7 @@
   "main": "./lib/update-package-dependencies",
   "version": "0.3.0",
   "private": true,
-  "description": "A short description of your package",
+  "description": "Runs `apm update` for the current project",
   "repository": "https://github.com/atom/update-package-dependencies",
   "license": "MIT",
   "engines": {
