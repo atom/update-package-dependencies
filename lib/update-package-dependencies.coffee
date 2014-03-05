@@ -1,4 +1,4 @@
-{$$, BufferedNodeProcess} = require 'atom'
+{$$, BufferedProcess} = require 'atom'
 
 module.exports =
   activate: ->
@@ -23,7 +23,7 @@ module.exports =
         view.append $$ ->
           @div class: 'text-error', 'Failed to update package depencencies.'
 
-    new BufferedNodeProcess({command, args, exit, options})
+    new BufferedProcess({command, args, exit, options})
 
   createProgressView: ->
     $$ ->
