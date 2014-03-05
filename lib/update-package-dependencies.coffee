@@ -18,7 +18,7 @@ module.exports =
       success = (code == 0)
       if success
         view.append $$ ->
-          @div class: 'text-success', 'Package depencencies updated.'
+          @div class: 'text-success', 'Package dependencies updated.'
       else
         view.append $$ ->
           @div class: 'text-error', 'Failed to update package depencencies.'
