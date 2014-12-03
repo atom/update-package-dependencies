@@ -25,7 +25,7 @@ describe "Update Package Dependencies", ->
       expect(options.cwd).toEqual(projectPath)
 
     it "displays a progress modal", ->
-      modal = atom.workspace.getModalPanels()[0]
+      [modal] = atom.workspace.getModalPanels()
       expect(modal.getItem().querySelector(".loading")).not.toBeNull()
       expect(modal.getItem().textContent).toMatch(/Updating package dependencies/)
 
@@ -35,13 +35,13 @@ describe "Update Package Dependencies", ->
         exit(0)
 
       it "shows a success message in the modal", ->
-        modal = atom.workspace.getModalPanels()[0]
+        [modal] = atom.workspace.getModalPanels()
         expect(modal.getItem().querySelector(".loading")).toBeNull()
         expect(modal.getItem().textContent).toMatch(/Package dependencies updated/)
 
       describe "triggering core:cancel", ->
         it "dismisses the modal", ->
-          modal = atom.workspace.getModalPanels()[0]
+          [modal] = atom.workspace.getModalPanels()
           atom.commands.dispatch(modal.getItem(), 'core:cancel')
           expect(atom.workspace.getModalPanels().length).toBe(0)
 
@@ -51,6 +51,6 @@ describe "Update Package Dependencies", ->
         exit(127)
 
       it "shows a failure message in the modal", ->
-        modal = atom.workspace.getModalPanels()[0]
+        [modal] = atom.workspace.getModalPanels()
         expect(modal.getItem().querySelector(".loading")).toBeNull()
         expect(modal.getItem().textContent).toMatch(/Failed to update package depencencies/)

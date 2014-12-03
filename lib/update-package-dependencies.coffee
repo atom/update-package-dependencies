@@ -3,7 +3,8 @@ ProgressElement = require './progress-element'
 
 module.exports =
   activate: ->
-    atom.commands.add("atom-workspace", 'update-package-dependencies:update', @update.bind(this))
+    atom.commands.add "atom-workspace", 'update-package-dependencies:update', =>
+      @update()
 
   update: ->
     view = new ProgressElement
