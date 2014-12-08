@@ -1,32 +1,31 @@
-{$$, BufferedProcess} = require 'atom'
+{BufferedProcess} = require 'atom'
+ProgressElement = require './progress-element'
 
 module.exports =
   activate: ->
-    atom.workspaceView.command 'update-package-dependencies:update', => @update()
+    atom.commands.add "atom-workspace", 'update-package-dependencies:update', =>
+      @update()
 
   update: ->
-    view = @createProgressView()
-    atom.workspaceView.append(view)
+    view = new ProgressElement
+    view.displayLoading()
+    panel = atom.workspace.addModalPanel(item: view)
 
     command = atom.packages.getApmPath()
     args = ['install']
-    options = {cwd: atom.project.getPath()}
-    exit = (code, signal) ->
-      atom.workspaceView.one 'core:cancel', -> view.remove()
-      view.empty().focus().on 'focusout', -> view.remove()
+    options = {cwd: atom.project.getPaths()[0]}
+    exit = (code) ->
+      view.focus()
 
-      success = (code == 0)
-      if success
-        view.append $$ ->
-          @div class: 'text-success', 'Package dependencies updated.'
+      atom.commands.add view, 'core:cancel', ->
+        panel.destroy()
+
+      if code == 0
+        view.displaySuccess()
       else
-        view.append $$ ->
-          @div class: 'text-error', 'Failed to update package depencencies.'
+        view.displayFailure()
 
-    new BufferedProcess({command, args, exit, options})
+    @runBufferedProcess({command, args, exit, options})
 
-  createProgressView: ->
-    $$ ->
-      @div tabindex: -1, class: 'overlay from-top', =>
-        @span class: 'loading loading-spinner-small inline-block'
-        @span "Updating package dependencies\u2026"
+  runBufferedProcess: (params) ->
+    new BufferedProcess(params)
