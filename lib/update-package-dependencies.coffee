@@ -13,7 +13,8 @@ module.exports =
 
     command = atom.packages.getApmPath()
     args = ['install']
-    options = {cwd: atom.project.getPaths()[0]}
+    options = {cwd: @getActiveProjectPath()}
+
     exit = (code) ->
       view.focus()
 
@@ -29,3 +30,9 @@ module.exports =
 
   runBufferedProcess: (params) ->
     new BufferedProcess(params)
+
+  getActiveProjectPath: ->
+    if activeItemPath = atom.workspace.getActivePaneItem()?.getPath?()
+      atom.project.relativizePath(activeItemPath)[0]
+    else
+      atom.project.getPaths()[0]
