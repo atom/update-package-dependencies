@@ -1,4 +1,5 @@
-os = require "os"
+os = require 'os'
+path = require 'path'
 UpdatePackageDependencies = require '../lib/update-package-dependencies'
 
 describe "Update Package Dependencies", ->
