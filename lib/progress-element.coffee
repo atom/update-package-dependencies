@@ -20,7 +20,7 @@ class ProgressElement extends HTMLDivElement
   displayFailure: ->
     @innerHTML = """
       <span class="text-error">
-        Failed to update package depencencies.
+        Failed to update package dependencies.
       </span>
     """
 
