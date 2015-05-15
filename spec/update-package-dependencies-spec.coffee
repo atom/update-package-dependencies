@@ -73,4 +73,4 @@ describe "Update Package Dependencies", ->
       it "shows a failure message in the modal", ->
         [modal] = atom.workspace.getModalPanels()
         expect(modal.getItem().querySelector(".loading")).toBeNull()
-        expect(modal.getItem().textContent).toMatch(/Failed to update package depencencies/)
+        expect(modal.getItem().textContent).toMatch(/Failed to update package dependencies/)
