@@ -21,7 +21,7 @@ module.exports =
       atom.commands.add view, 'core:cancel', ->
         panel.destroy()
 
-      if code == 0
+      if code is 0
         view.displaySuccess()
       else
         view.displayFailure()
