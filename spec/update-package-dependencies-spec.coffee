@@ -56,7 +56,7 @@ describe "Update Package Dependencies", ->
       it "shows a success notification message", ->
         [notifications] = atom.notifications.getNotifications()
         expect(atom.workspace.getModalPanels().length).toEqual(0)
-        expect(atom.notifications.getNotifications()[0].getMessage()).toEqual("Succes!")
+        expect(atom.notifications.getNotifications()[0].getMessage()).toEqual("Success!")
 
     describe "when the update fails", ->
       beforeEach ->
