@@ -23,10 +23,10 @@ module.exports =
 
       if code is 0
         atom.notifications.addSuccess("Package dependencies updated.")
-        view.displaySuccess()
+        panel.destroy()
       else
         atom.notifications.addError("Failed to update package dependencies.")
-        view.displayFailure()
+        panel.destroy()
 
     @runBufferedProcess({command, args, exit, options})
 

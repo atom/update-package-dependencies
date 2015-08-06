@@ -10,20 +10,6 @@ class ProgressElement extends HTMLDivElement
       </span>
     """
 
-  displaySuccess: ->
-    @innerHTML = """
-      <span class="text-success">
-        Package dependencies updated.
-      </span>
-    """
-
-  displayFailure: ->
-    @innerHTML = """
-      <span class="text-error">
-        Failed to update package dependencies.
-      </span>
-    """
-
 module.exports =
 document.registerElement("update-package-dependencies-progress",
   prototype: ProgressElement.prototype
