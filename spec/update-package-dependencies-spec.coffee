@@ -23,7 +23,8 @@ describe "Update Package Dependencies", ->
 
       expect(mainModule.runBufferedProcess).toHaveBeenCalled()
       [{command, args, options}] = mainModule.runBufferedProcess.argsForCall[0]
-      expect(command).toMatch(/apm$/)
+      expect(command).toMatch(/\/apm$/) unless process.platform is 'win32'
+      expect(command).toMatch(/\\apm.cmd$/) if process.platform is 'win32'
       expect(args).toEqual(["install"])
       expect(options.cwd).toEqual(projectPath)
 
