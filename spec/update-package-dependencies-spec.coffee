@@ -31,8 +31,8 @@ describe "Update Package Dependencies", ->
       atom.commands.dispatch(workspaceElement, "update-package-dependencies:update")
 
       [modal] = atom.workspace.getModalPanels()
-      expect(modal.getItem().querySelector(".loading")).not.toBeNull()
-      expect(modal.getItem().textContent).toMatch(/Updating package dependencies/)
+      expect(modal.getItem().element.querySelector(".loading")).not.toBeNull()
+      expect(modal.getItem().element.textContent).toMatch(/Updating package dependencies/)
 
     describe "when there are multiple project paths", ->
       beforeEach ->
@@ -55,13 +55,13 @@ describe "Update Package Dependencies", ->
 
       it "shows a success message in the modal", ->
         [modal] = atom.workspace.getModalPanels()
-        expect(modal.getItem().querySelector(".loading")).toBeNull()
-        expect(modal.getItem().textContent).toMatch(/Package dependencies updated/)
+        expect(modal.getItem().element.querySelector(".loading")).toBeNull()
+        expect(modal.getItem().element.textContent).toMatch(/Package dependencies updated/)
 
       describe "triggering core:cancel", ->
         it "dismisses the modal", ->
           [modal] = atom.workspace.getModalPanels()
-          atom.commands.dispatch(modal.getItem(), 'core:cancel')
+          atom.commands.dispatch(modal.getItem().element, 'core:cancel')
           expect(atom.workspace.getModalPanels().length).toBe(0)
 
     describe "when the update fails", ->
@@ -72,5 +72,5 @@ describe "Update Package Dependencies", ->
 
       it "shows a failure message in the modal", ->
         [modal] = atom.workspace.getModalPanels()
-        expect(modal.getItem().querySelector(".loading")).toBeNull()
-        expect(modal.getItem().textContent).toMatch(/Failed to update package dependencies/)
+        expect(modal.getItem().element.querySelector(".loading")).toBeNull()
+        expect(modal.getItem().element.textContent).toMatch(/Failed to update package dependencies/)

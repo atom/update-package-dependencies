@@ -16,9 +16,9 @@ module.exports =
     options = {cwd: @getActiveProjectPath()}
 
     exit = (code) ->
-      view.focus()
+      view.element.focus()
 
-      atom.commands.add view, 'core:cancel', ->
+      atom.commands.add view.element, 'core:cancel', ->
         panel.destroy()
 
       if code is 0
