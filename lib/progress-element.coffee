@@ -1,9 +1,11 @@
-class ProgressElement extends HTMLDivElement
-  createdCallback: ->
-    @tabIndex = -1
+module.exports =
+class ProgressElement
+  constructor: ->
+    @element = document.createElement("update-package-dependencies-progress")
+    @element.tabIndex = -1
 
   displayLoading: ->
-    @innerHTML = """
+    @element.innerHTML = """
       <span class="loading loading-spinner-small inline-block"></span>
       <span>
         Updating package dependencies\u2026
@@ -11,21 +13,15 @@ class ProgressElement extends HTMLDivElement
     """
 
   displaySuccess: ->
-    @innerHTML = """
+    @element.innerHTML = """
       <span class="text-success">
         Package dependencies updated.
       </span>
     """
 
   displayFailure: ->
-    @innerHTML = """
+    @element.innerHTML = """
       <span class="text-error">
         Failed to update package dependencies.
       </span>
     """
-
-module.exports =
-document.registerElement("update-package-dependencies-progress",
-  prototype: ProgressElement.prototype
-  extends: "div"
-)
