@@ -1,7 +1,7 @@
 {
   "name": "update-package-dependencies",
   "main": "./lib/update-package-dependencies",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "private": true,
   "description": "Runs `apm install` for the current project",
   "repository": "https://github.com/atom/update-package-dependencies",
