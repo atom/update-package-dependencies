@@ -53,16 +53,11 @@ describe "Update Package Dependencies", ->
         [{exit}] = mainModule.runBufferedProcess.argsForCall[0]
         exit(0)
 
-      it "shows a success message in the modal", ->
-        [modal] = atom.workspace.getModalPanels()
-        expect(modal.getItem().element.querySelector(".loading")).toBeNull()
-        expect(modal.getItem().element.textContent).toMatch(/Package dependencies updated/)
-
-      describe "triggering core:cancel", ->
-        it "dismisses the modal", ->
-          [modal] = atom.workspace.getModalPanels()
-          atom.commands.dispatch(modal.getItem().element, 'core:cancel')
-          expect(atom.workspace.getModalPanels().length).toBe(0)
+      it "shows a success notification message", ->
+        [notification] = atom.notifications.getNotifications()
+        expect(atom.workspace.getModalPanels().length).toEqual(0)
+        expect(notification.getType()).toEqual("success")
+        expect(notification.getMessage()).toEqual("Success!")
 
     describe "when the update fails", ->
       beforeEach ->
@@ -71,6 +66,7 @@ describe "Update Package Dependencies", ->
         exit(127)
 
       it "shows a failure message in the modal", ->
-        [modal] = atom.workspace.getModalPanels()
-        expect(modal.getItem().element.querySelector(".loading")).toBeNull()
-        expect(modal.getItem().element.textContent).toMatch(/Failed to update package dependencies/)
+        [notification] = atom.notifications.getNotifications()
+        expect(atom.workspace.getModalPanels().length).toEqual(0)
+        expect(notification.getType()).toEqual("error")
+        expect(notification.getMessage()).toEqual("Error!")

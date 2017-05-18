@@ -11,17 +11,3 @@ class ProgressElement
         Updating package dependencies\u2026
       </span>
     """
-
-  displaySuccess: ->
-    @element.innerHTML = """
-      <span class="text-success">
-        Package dependencies updated.
-      </span>
-    """
-
-  displayFailure: ->
-    @element.innerHTML = """
-      <span class="text-error">
-        Failed to update package dependencies.
-      </span>
-    """
