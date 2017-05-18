@@ -65,7 +65,7 @@ describe "Update Package Dependencies", ->
         [{exit}] = mainModule.runBufferedProcess.argsForCall[0]
         exit(127)
 
-      it "shows a failure message in the modal", ->
+      it "shows a failure notification", ->
         [notification] = atom.notifications.getNotifications()
         expect(atom.workspace.getModalPanels().length).toEqual(0)
         expect(notification.getType()).toEqual("error")
