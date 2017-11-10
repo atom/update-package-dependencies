@@ -29,6 +29,13 @@ describe('Update Package Dependencies', () => {
       expect(options.cwd).toEqual(projectPath)
     })
 
+    it('sets NODE_ENV to development in order to install devDependencies', () => {
+      updatePackageDependencies.update()
+
+      const {options} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
+      expect(options.env.NODE_ENV).toEqual('development')
+    })
+
     it('displays a progress modal', () => {
       updatePackageDependencies.update()
 
