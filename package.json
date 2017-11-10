@@ -9,6 +9,11 @@
   "engines": {
     "atom": ">0.39.0"
   },
+  "activationCommands": {
+    "atom-workspace": [
+      "update-package-dependencies:update"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
     "standard": "^10.0.3"

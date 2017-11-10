@@ -1,28 +1,25 @@
 const os = require('os')
 const path = require('path')
+const updatePackageDependencies = require('../lib/update-package-dependencies')
 
 const {it, fit, ffit, afterEach, beforeEach} = require('./async-spec-helpers') // eslint-disable-line no-unused-vars
 
 describe('Update Package Dependencies', () => {
-  let [workspaceElement, mainModule, projectPath] = []
+  let projectPath = null
 
-  beforeEach(async () => {
+  beforeEach(() => {
     projectPath = __dirname
-    workspaceElement = atom.views.getView(atom.workspace)
     atom.project.setPaths([projectPath])
-
-    const pack = await atom.packages.activatePackage('update-package-dependencies')
-    mainModule = pack.mainModule
   })
 
-  describe('the update-package-dependencies:update command', () => {
-    beforeEach(() => spyOn(mainModule, 'runBufferedProcess'))
+  describe('updating package dependencies', () => {
+    beforeEach(() => spyOn(updatePackageDependencies, 'runBufferedProcess'))
 
-    it('updates package dependencies', () => {
-      atom.commands.dispatch(workspaceElement, 'update-package-dependencies:update')
+    it('runs the `apm install` command', () => {
+      updatePackageDependencies.update()
 
-      expect(mainModule.runBufferedProcess).toHaveBeenCalled()
-      const [{command, args, options}] = mainModule.runBufferedProcess.argsForCall[0]
+      expect(updatePackageDependencies.runBufferedProcess).toHaveBeenCalled()
+      const [{command, args, options}] = updatePackageDependencies.runBufferedProcess.argsForCall[0]
       if (process.platform !== 'win32') {
         expect(command).toMatch(/\/apm$/)
       } else {
@@ -33,7 +30,7 @@ describe('Update Package Dependencies', () => {
     })
 
     it('displays a progress modal', () => {
-      atom.commands.dispatch(workspaceElement, 'update-package-dependencies:update')
+      updatePackageDependencies.update()
 
       const [modal] = atom.workspace.getModalPanels()
       expect(modal.getItem().element.querySelector('.loading')).not.toBeNull()
@@ -46,16 +43,16 @@ describe('Update Package Dependencies', () => {
       it('uses the currently active one', async () => {
         await atom.workspace.open(path.join(projectPath, 'package.json'))
 
-        atom.commands.dispatch(workspaceElement, 'update-package-dependencies:update')
-        const [{options}] = mainModule.runBufferedProcess.argsForCall[0]
+        updatePackageDependencies.update()
+        const [{options}] = updatePackageDependencies.runBufferedProcess.argsForCall[0]
         expect(options.cwd).toEqual(projectPath)
       })
     })
 
     describe('when the update succeeds', () => {
       beforeEach(() => {
-        atom.commands.dispatch(workspaceElement, 'update-package-dependencies:update')
-        const [{exit}] = mainModule.runBufferedProcess.argsForCall[0]
+        updatePackageDependencies.update()
+        const [{exit}] = updatePackageDependencies.runBufferedProcess.argsForCall[0]
         exit(0)
       })
 
@@ -69,8 +66,8 @@ describe('Update Package Dependencies', () => {
 
     describe('when the update fails', () => {
       beforeEach(() => {
-        atom.commands.dispatch(workspaceElement, 'update-package-dependencies:update')
-        const [{exit}] = mainModule.runBufferedProcess.argsForCall[0]
+        updatePackageDependencies.update()
+        const [{exit}] = updatePackageDependencies.runBufferedProcess.argsForCall[0]
         exit(127)
       })
 
@@ -80,6 +77,17 @@ describe('Update Package Dependencies', () => {
         expect(notification.getType()).toEqual('error')
         expect(notification.getMessage()).toEqual('Error!')
       })
+    })
+  })
+
+  describe('the `update-package-dependencies:update` command', () => {
+    beforeEach(() => spyOn(updatePackageDependencies, 'update'))
+
+    it('activates the package and updates package dependencies', async () => {
+      const activationPromise = atom.packages.activatePackage('update-package-dependencies')
+      atom.commands.dispatch(atom.views.getView(atom.workspace), 'update-package-dependencies:update')
+      const {mainModule} = await activationPromise
+      expect(mainModule.update).toHaveBeenCalled()
     })
   })
 })
