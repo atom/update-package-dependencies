@@ -13,13 +13,22 @@ describe('Update Package Dependencies', () => {
   })
 
   describe('updating package dependencies', () => {
-    beforeEach(() => spyOn(updatePackageDependencies, 'runBufferedProcess'))
+    let {command, args, exit, options} = {}
+    beforeEach(() => {
+      spyOn(updatePackageDependencies, 'runBufferedProcess').andCallFake((params) => {
+        ({command, args, exit, options} = params)
+        return true // so that this.process isn't null
+      })
+    })
+
+    afterEach(() => {
+      if (updatePackageDependencies.process) exit(0)
+    })
 
     it('runs the `apm install` command', () => {
       updatePackageDependencies.update()
 
       expect(updatePackageDependencies.runBufferedProcess).toHaveBeenCalled()
-      const {command, args, options} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
       if (process.platform !== 'win32') {
         expect(command.endsWith('/apm')).toBe(true)
       } else {
@@ -29,10 +38,22 @@ describe('Update Package Dependencies', () => {
       expect(options.cwd).toEqual(projectPath)
     })
 
+    it('only allows one apm process to be spawned at a time', () => {
+      updatePackageDependencies.update()
+      expect(updatePackageDependencies.runBufferedProcess.callCount).toBe(1)
+
+      updatePackageDependencies.update()
+      updatePackageDependencies.update()
+      expect(updatePackageDependencies.runBufferedProcess.callCount).toBe(1)
+
+      exit(0)
+      updatePackageDependencies.update()
+      expect(updatePackageDependencies.runBufferedProcess.callCount).toBe(2)
+    })
+
     it('sets NODE_ENV to development in order to install devDependencies', () => {
       updatePackageDependencies.update()
 
-      const {options} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
       expect(options.env.NODE_ENV).toEqual('development')
     })
 
@@ -45,9 +66,14 @@ describe('Update Package Dependencies', () => {
 
       mainModule.update()
 
-      const tile = statusBar.mainModule.statusBar.getRightTiles().find(tile => tile.item.matches('update-package-dependencies-status'))
+      let tile = statusBar.mainModule.statusBar.getRightTiles().find(tile => tile.item.matches('update-package-dependencies-status'))
       expect(tile.item.classList.contains('update-package-dependencies-status')).toBe(true)
       expect(tile.item.firstChild.classList.contains('loading')).toBe(true)
+
+      exit(0)
+
+      tile = statusBar.mainModule.statusBar.getRightTiles().find(tile => tile.item.matches('update-package-dependencies-status'))
+      expect(tile).toBeUndefined()
     })
 
     describe('when there are multiple project paths', () => {
@@ -57,7 +83,6 @@ describe('Update Package Dependencies', () => {
         await atom.workspace.open(path.join(projectPath, 'package.json'))
 
         updatePackageDependencies.update()
-        const {options} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
         expect(options.cwd).toEqual(projectPath)
       })
     })
@@ -65,13 +90,11 @@ describe('Update Package Dependencies', () => {
     describe('when the update succeeds', () => {
       beforeEach(() => {
         updatePackageDependencies.update()
-        const {exit} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
         exit(0)
       })
 
       it('shows a success notification message', () => {
         const notification = atom.notifications.getNotifications()[0]
-        expect(atom.workspace.getModalPanels().length).toEqual(0)
         expect(notification.getType()).toEqual('success')
         expect(notification.getMessage()).toEqual('Success!')
       })
@@ -80,13 +103,11 @@ describe('Update Package Dependencies', () => {
     describe('when the update fails', () => {
       beforeEach(() => {
         updatePackageDependencies.update()
-        const {exit} = updatePackageDependencies.runBufferedProcess.argsForCall[0][0]
         exit(127)
       })
 
       it('shows a failure notification', () => {
         const notification = atom.notifications.getNotifications()[0]
-        expect(atom.workspace.getModalPanels().length).toEqual(0)
         expect(notification.getType()).toEqual('error')
         expect(notification.getMessage()).toEqual('Error!')
       })
