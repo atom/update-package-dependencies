@@ -36,12 +36,18 @@ describe('Update Package Dependencies', () => {
       expect(options.env.NODE_ENV).toEqual('development')
     })
 
-    it('displays a progress modal', () => {
-      updatePackageDependencies.update()
+    it('adds a status bar tile', async () => {
+      const statusBar = await atom.packages.activatePackage('status-bar')
 
-      const modal = atom.workspace.getModalPanels()[0]
-      expect(modal.getItem().element.querySelector('.loading')).not.toBeNull()
-      expect(modal.getItem().element.textContent).toMatch(/Updating package dependencies/)
+      const activationPromise = atom.packages.activatePackage('update-package-dependencies')
+      atom.commands.dispatch(atom.views.getView(atom.workspace), 'update-package-dependencies:update')
+      const {mainModule} = await activationPromise
+
+      mainModule.update()
+
+      const tile = statusBar.mainModule.statusBar.getRightTiles().find(tile => tile.item.matches('update-package-dependencies-status'))
+      expect(tile.item.classList.contains('update-package-dependencies-status')).toBe(true)
+      expect(tile.item.firstChild.classList.contains('loading')).toBe(true)
     })
 
     describe('when there are multiple project paths', () => {
