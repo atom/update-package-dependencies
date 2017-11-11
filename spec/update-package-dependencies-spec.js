@@ -13,10 +13,10 @@ describe('Update Package Dependencies', () => {
   })
 
   describe('updating package dependencies', () => {
-    let {command, args, exit, options} = {}
+    let {command, args, stderr, exit, options} = {}
     beforeEach(() => {
       spyOn(updatePackageDependencies, 'runBufferedProcess').andCallFake((params) => {
-        ({command, args, exit, options} = params)
+        ({command, args, stderr, exit, options} = params)
         return true // so that this.process isn't null
       })
     })
@@ -34,7 +34,7 @@ describe('Update Package Dependencies', () => {
       } else {
         expect(command.endsWith('\\apm.cmd')).toBe(true)
       }
-      expect(args).toEqual(['install'])
+      expect(args).toEqual(['install', '--no-color'])
       expect(options.cwd).toEqual(projectPath)
     })
 
@@ -96,20 +96,23 @@ describe('Update Package Dependencies', () => {
       it('shows a success notification message', () => {
         const notification = atom.notifications.getNotifications()[0]
         expect(notification.getType()).toEqual('success')
-        expect(notification.getMessage()).toEqual('Success!')
+        expect(notification.getMessage()).toEqual('Package dependencies updated')
       })
     })
 
     describe('when the update fails', () => {
       beforeEach(() => {
         updatePackageDependencies.update()
+        stderr('oh bother')
         exit(127)
       })
 
       it('shows a failure notification', () => {
         const notification = atom.notifications.getNotifications()[0]
         expect(notification.getType()).toEqual('error')
-        expect(notification.getMessage()).toEqual('Error!')
+        expect(notification.getMessage()).toEqual('Failed to update package dependencies')
+        expect(notification.getDetail()).toEqual('oh bother')
+        expect(notification.isDismissable()).toBe(true)
       })
     })
   })
