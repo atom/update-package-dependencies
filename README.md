@@ -1,3 +1,7 @@
+### This package is now a part of the [core Atom repository](https://github.com/atom/atom/tree/master/packages/update-package-dependencies). Please direct all issues and pull requests there in the future!
+
+---
+
 ## Update Package Dependencies package
 [![OS X Build Status](https://travis-ci.org/atom/update-package-dependencies.svg?branch=master)](https://travis-ci.org/atom/update-package-dependencies) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/5xqtoc3xk1e7lt2y/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/update-package-dependencies/branch/master) [![Dependency Status](https://david-dm.org/atom/update-package-dependencies.svg)](https://david-dm.org/atom/update-package-dependencies)
 
